@@ -13,6 +13,9 @@ import com.canozgan.rickandmorty.databinding.ActivityMainBinding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     Singleton singleton;
     private String BASE_URL_FOR_LOCATIONS;
+    private String BASE_URL_FOR_CHARACTERS;
+    VerticalRecyclerViewAdapter verticalRecyclerViewAdapter;
     @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
             }
             binding.horizontalRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this,LinearLayoutManager.HORIZONTAL,false));
             binding.horizontalRecyclerView.setAdapter(singleton.horizontalRecyclerViewAdapter);
+            loadDataVerticalList();
         }
 
         initScrollListener();
@@ -60,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         ApiForModels apiForModels = retrofit.create(ApiForModels.class);
-        Call<LocationModel> call = apiForModels.getData(locationUrl);
+        Call<LocationModel> call = apiForModels.getDataForLocations(locationUrl);
 
         call.enqueue(new Callback<LocationModel>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -70,10 +76,12 @@ public class MainActivity extends AppCompatActivity {
                     LocationModel locationModel=response.body();
                     singleton.locationArrayList=locationModel.locationArrayList;
                     singleton.locationArrayList.get(0).isLatestClicked=true;
+                    singleton.location= singleton.locationArrayList.get(0);
                     singleton.horizontalRecyclerViewAdapter=new HorizontalRecyclerViewAdapter(singleton.locationArrayList);
                     binding.horizontalRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this,LinearLayoutManager.HORIZONTAL,false));
                     binding.horizontalRecyclerView.setAdapter(singleton.horizontalRecyclerViewAdapter);
                     singleton.isLoading=false;
+                    loadDataVerticalList();
                 }
             }
 
@@ -126,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                             .addConverterFactory(GsonConverterFactory.create(gson))
                             .build();
                     ApiForModels apiForModels = retrofit.create(ApiForModels.class);
-                    Call<LocationModel> call = apiForModels.getData(locationUrl);
+                    Call<LocationModel> call = apiForModels.getDataForLocations(locationUrl);
 
                     call.enqueue(new Callback<LocationModel>() {
                         @SuppressLint("NotifyDataSetChanged")
@@ -151,6 +159,43 @@ public class MainActivity extends AppCompatActivity {
             }, 2000);
         }
 
+    }
+    public void loadDataVerticalList(){
+        if(singleton.location.urlsForCharacters.size()!=0){
+            BASE_URL_FOR_CHARACTERS="https://rickandmortyapi.com/api/character/";
+            String ADDITIONAL_URL_FOR_CHARACTERS ="";
+            for(String characterUrl : singleton.location.urlsForCharacters){
+                String characterId ="";
+                for(int i=BASE_URL_FOR_CHARACTERS.length();i<characterUrl.length();i++){
+                    characterId= characterId+ characterUrl.charAt(i);
+                }
+                characterId=characterId+",";
+                ADDITIONAL_URL_FOR_CHARACTERS=ADDITIONAL_URL_FOR_CHARACTERS+characterId;
+            }
+            Gson gson= new GsonBuilder().setLenient().create();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL_FOR_CHARACTERS)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build();
+            ApiForModels apiForModels = retrofit.create(ApiForModels.class);
+            Call<List<CharacterModel>> call = apiForModels.getDataForCharacters(ADDITIONAL_URL_FOR_CHARACTERS);
+            call.enqueue(new Callback<List<CharacterModel>>() {
+                @Override
+                public void onResponse(Call<List<CharacterModel>> call, Response<List<CharacterModel>> response) {
+                    if(response.isSuccessful()){
+                        ArrayList<CharacterModel> characterModelArrayList=new ArrayList<>(response.body());
+                        verticalRecyclerViewAdapter=new VerticalRecyclerViewAdapter(characterModelArrayList);
+                        binding.verticalRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                        binding.verticalRecyclerView.setAdapter(verticalRecyclerViewAdapter);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<CharacterModel>> call, Throwable t) {
+
+                }
+            });
+        }
     }
 
 

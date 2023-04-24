@@ -8,6 +8,7 @@ public class Singleton {
     public int pageNumber;
     public boolean isLoading;
     HorizontalRecyclerViewAdapter horizontalRecyclerViewAdapter;
+    public CharacterModel selectedCharacterModel;
     private static Singleton singleton;
     private Singleton(){
         locationArrayList =new ArrayList<>();
