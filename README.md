@@ -2,7 +2,7 @@
 
 <img width="800" alt="rick_and_morty" src="https://github.com/canozgan/RickAndMorty/assets/129083272/a7cab281-5aa7-4d5a-a8a3-d0baf3c2a03a">
 
-General Features
+General Specifications
 
 1)It is an application where the user can list Rick and Morty series locations, the characters in the location and view the details of the characters.
 
