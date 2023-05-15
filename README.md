@@ -8,7 +8,7 @@ General Specifications
 
 2)There is a horizontal list and a vertical list on the main page of the application. Rick and Morty series locations are listed in the horizontal list, and the characters in the selected location are listed in the vertical list.
 
-3)The user can view the character's details (type, gender, etc.) by clicking on the character in the vertical list.
+3)The user can view the character's details (specy, gender, etc.) by clicking on the character in the vertical list.
 
 4)The user can also use the application in landscape mode if he wishes.
 
