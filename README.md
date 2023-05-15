@@ -14,10 +14,12 @@ General Specifications
 
 Technical Specifications
 
-1)Rick and Morty series locations, characters in location and details of characters are taken from a remote server in Json file format.
+1)This application was developed in Java language for phones with a minimum SDK 24. It was developed on the Android Studio platform.
 
-2)Retrofit and Gson library were used to pull data from the server and transfer this data to objects. This process is done asynchronously without locking the main thread that the user interacts with.
+2)Rick and Morty series locations, characters in location and details of characters are taken from a remote server in Json file format.
 
-3)Recycler view technology was used during the design of the horizontal and vertical list.
+3)Retrofit and Gson library were used to pull data from the server and transfer this data to objects. This process is done asynchronously without locking the main thread that the user interacts with.
 
-4)The horizontal list initially has 20 locations. When the user comes to the end by scroll right, loading item symbol is added to the end of the list temporarily and new data is requested from the server. When new data arrives, the loading item symbol is removed and new data is added to the list.
+4)Recycler view technology was used during the design of the horizontal and vertical list.
+
+5)The horizontal list initially has 20 locations. When the user comes to the end by scroll right, loading item symbol is added to the end of the list temporarily and new data is requested from the server. When new data arrives, the loading item symbol is removed and new data is added to the list.
